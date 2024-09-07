@@ -41,6 +41,7 @@ CREATE TABLE users (
     password TEXT,
     role INTEGER
 );
+
 Sovellukseni vaatii; from sqlalchemy.sql import text. Ja execute-funktion kutsuissa SQL-komennon ympärille funktio text.
 
 Sovellus ei ole testattavissa Fly.iossa.
