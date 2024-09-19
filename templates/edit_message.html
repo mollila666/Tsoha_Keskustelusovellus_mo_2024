@@ -1,0 +1,25 @@
+<title>Viestin muokkaaminen</title>
+{% block content %}
+
+<h2>Viesti muokkaaminen</h2>
+
+<b><span style="color:black">Voit muuttaa viestiä tästä:</span></b>
+<form action="/rename_message" method="POST">
+<input type="text" value={{ id }} name="message_id" style="opacity: 0;"></p>
+<textarea name="new_name" rows="1" cols="40">
+{{ name }}
+</textarea>
+<br>
+<br>
+<b><span style="color:black">Voit myös poistaa viestin:</span></b><br>
+<br>
+<b><span style="color:black">Tuhoa viesti: <input type="checkbox" name="tuhoa" value="1"></span></b>
+<input type='hidden' value='0' name="tuhoa">
+<br>
+<br>
+<input type="submit" value="Päivitä muutokset">
+</form>
+
+<a href="/owndata">Palaa takaisin</a>
+
+{% endblock %}

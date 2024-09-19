@@ -1,0 +1,52 @@
+<title>Ylläpitäjän työkalut</title>
+
+{% block content %}
+<h2>Ylläpitäjän työkalut ovat täällä!</h2>
+<br>
+<b><span style="color:black">Luo uusi alue:</span></b>
+<br>
+
+<form action="/create_area" method="POST">
+<b><span style="color:black"><p>Uusi alue:</span></b>
+<textarea name="area_name" rows="1" cols="40"></textarea>
+<input type="submit" value="Luo alue">
+</form>
+<br>
+<b><span style="color:black">Voit poistaa alueen tästä:</span></b>
+<br>
+<br>
+<form action="/delete_area" method="POST">
+<b><span style="color:black">Poista alue:</span></b>
+<select name="area_name"><br>
+{% for area in areas %}
+<option value="{{ area[1] }}"> {{ area[1] }}
+{% endfor %}
+</select>
+<input type="submit" value="Poista alue">
+</form>
+<br>
+
+<b><span style="color:black">Voit luoda myös salaisen alueen valituille käyttäjille!</span></b>
+<br>
+
+<form action="/create_private_area" method="POST">
+<b><span style="color:black"><p>Uusi alue:</span></b>
+<textarea name="area_name" rows="1" cols="40"></textarea>
+
+<br>
+<br>
+<b><span style="color:black"><p>Valitse käyttäjät:</span></b> <br><br>
+{% for user in users %}
+<input type="checkbox" name="users" value="{{ user[0] }}"> {{ user[0] }} 
+{% endfor %}
+<br>
+<br>
+<input type="submit" value="Luo salattu alue">
+</form>
+
+<br>
+
+<a href="/">Palaa takaisin</a>
+
+{% endblock %}
+

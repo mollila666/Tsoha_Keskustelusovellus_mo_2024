@@ -1,0 +1,50 @@
+<title>Virhe</title>
+<b><span style="color:black">Virhe: {{ message }}</span></b>
+
+{% if message == "Uudella ketjulla pitää olla nimi!" %}
+<p>
+<a href="/area/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Viesti ei saa olla tyhjä, kirjoita viesti!" %}
+<p>
+<a href="/area/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Uuden ketjun nimessä on liian monta merkkiä, maksimi on 200!" %}
+<p>
+<a href="/area/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Viesti ei saa olla liian pitkä, maksimi on 1000 merkkiä!" %}
+<p>
+<a href="/area/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Viesti ei saa olla tyhjä, kirjoita viesti uudelleen!" %}
+<p>
+<a href="/chain/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Uusi viesti ei saa olla liian pitkä, maksimi on 1000 merkkiä!" %}
+<p>
+<a href="/chain/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Muokattu viesti ei saa olla tyhjä, kirjoita viesti uudelleen!" %}
+<p>
+<a href="/editmessage/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Muokattu viesti ei saa olla liian pitkä, maksimi 1000 merkkiä!" %}
+<p>
+<a href="/editmessage/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Muokattu ketjun nimi ei saa olla tyhjä, kirjoita nimi uudelleen!" %}
+<p>
+<a href="/editchain/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Muokattu ketjun nimi ei saa olla liian pitkä, maksimi 200 merkkiä!" %}
+<p>
+<a href="/editchain/{{ areaid }}">Palaa takaisin</a>
+{% elif message == "Alueen nimi on jo käytössä, valitse toinen nimi alueelle" %}
+<p>
+<a href="/admin">Palaa takaisin</a>
+{% elif message == "Alueen nimessä pitää olla vähintään 1 merkki!" %}
+<p>
+<a href="/admin">Palaa takaisin</a>
+{% elif message == "Alueen nimessä on liian monta merkkiä, maksimi on 200!" %}
+<p>
+<a href="/admin">Palaa takaisin</a>
+{% elif message == "Valitse vähintään 1 käyttäjä!" %}
+<p>
+<a href="/admin">Palaa takaisin</a>
+{% else %}
+<p>
+<form action="/register" method="post">
+<a href="/register">Palaa takaisin</a>
+{% endif %}

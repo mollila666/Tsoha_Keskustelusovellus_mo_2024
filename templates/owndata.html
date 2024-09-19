@@ -1,0 +1,32 @@
+<title>Omat viestit</title>
+
+{% block content %}
+
+<h2>Omat viestiketjut ja viestit!</h2>
+
+<b><span style="color:black">Voit muokata viestiä tai ketjun nimeä sekä poistaa viestisi tai koko ketjun.</span></b><br>
+<br>
+<b><span style="color:black">Ketjut ja viestit joita voit muokata on linkitetty alla.</span></b><br>
+<br>
+
+<ul>
+{% for chain in owndata %}
+{% if chain[0][2] == session.user_name %}
+Ketjun: <a href="/editchain/{{ chain[0][1] }}">{{ chain[0][0] }}</a>, viestit:<br>
+{% else %}
+Ketjun: {{chain[0][0]}}, viestit:<br>
+{% endif %}
+{% for message in chain[1] %}
+{% if message[2] == session.user_name %}
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="/editmessage/{{ message[1] }}">{{ message[0] }}</a><br>
+{% else %}
+&nbsp;&nbsp;&nbsp;&nbsp; {{message[0]}}<br>
+{% endif %}
+{% endfor %}
+{% endfor %}
+</ul>
+
+
+<a href="/">Palaa takaisin</a>
+
+{% endblock %}

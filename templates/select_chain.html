@@ -1,0 +1,26 @@
+<title>Viestiketjut</title>
+
+{% block content %}
+
+<h2>Ketju nimeltä {{ name }}:</h2>
+
+<b><span style="color:black">Ketjun {{ name }} viestit:</span></b>
+<br>
+<ul>
+{% for message in messages %}
+{{ message[0] }}<br>
+{% endfor %}
+</ul>
+
+<b><span style="color:black">Luo uusi viesti ketjuun  {{ name }}:</span></b>
+
+<form action="/create_message" method="POST">
+<input type="text" value={{ id }} name="chain_id" style="opacity: 0;"></p>
+<textarea name="Message" rows="5" cols="40"></textarea>
+<br>
+<input type="submit" value="Lähetä viesti">
+</form>
+
+<a href="/area/{{ area_id }}">Palaa takaisin</a>
+
+{% endblock %}

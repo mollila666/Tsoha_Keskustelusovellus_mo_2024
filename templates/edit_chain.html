@@ -1,0 +1,24 @@
+<title>Ketjun muokkaaminen</title>
+{% block content %}
+
+<h2>Ketju nimeltä: {{ name }}.</h2>
+
+<b><span style="color:black">Voit muuttaa ketjun nimeä alla:</span></b><br>
+<form action="/rename_chain" method="POST">
+<textarea name="new_name" rows="1" cols="40">
+{{ name }}
+</textarea>
+<input type="text" value={{ id }} name="chain_id" style="opacity: 0;"></p>
+<br>
+<b><span style="color:black">Voit myös poistaa koko ketjun:</span></b><br>
+<br>
+<b><span style="color:black">Tuhoa ketju: <input type="checkbox" name="tuhoa" value="1"></span></b>
+<input type='hidden' value='0' name="tuhoa">
+<br>
+<br>
+<input type="submit" value="Päivitä muutokset">
+</form>
+
+<a href="/owndata">Palaa takaisin</a>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+<title>Viestialueet</title>
+
+{% block content %}
+
+<h2>Alue nimeltä {{ name }}!</h2>
+
+<b><span style="color:black">Alueen {{ name }} ketjut, valitse ketju, jossa haluat keskustella:</span></b>
+
+<br>
+
+<ul>
+{% for chain in chains %}
+<a href="/chain/{{ chain[1] }}">{{ chain[0] }}</a><br>
+{% endfor %}
+</ul>
+
+<b><span style="color:black">Luo uusi ketju!</span></b>
+<br>
+
+<form action="/create_chain" method="POST">
+<b><span style="color:black"><p>Uusi ketju alueelle {{ name }}:</span></b>
+<input type="text" value={{ id }} name="area_id" style="opacity: 0;"></p>
+<textarea name="chain" rows="1" cols="40"></textarea>
+<br> <br>
+<b><span style="color:black">Kirjoita uuden ketjun ensimmäinen viesti alle:</span></b>
+<br> <br>
+<textarea name="content" rows="3" cols="40"></textarea>
+<br>
+<input type="submit" value="Luo uusi ketju">
+</form>
+
+
+
+<a href="/">Palaa takaisin</a>
+
+{% endblock %}

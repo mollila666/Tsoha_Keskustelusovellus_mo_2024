@@ -1,0 +1,29 @@
+<title>Viestin haku</title>
+
+{% block content %}
+
+<h2>Hakutulokset!</h2>
+
+<b><span style="color:black">Avainsanalla {{ keyword }} löytyi seuraavat viestit:</span></b>
+<br>
+<br>
+
+<ul>
+{% for area in messages %}
+Alue: {{ area[0] }}<br>
+{% for chain in area[1] %}
+
+&nbsp;&nbsp;&nbsp;&nbsp; Viestiketju: <a href="/chain/{{ chain[1] }}">{{ chain[0] }}</a><br>
+
+{% for message in chain[2] %}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; viesti: {{ message }}<br>
+{% endfor %}
+{% endfor %}
+{% endfor %}
+</ul>
+
+<br>
+<br>
+<a href="/">Palaa takaisin</a>
+
+{% endblock %}

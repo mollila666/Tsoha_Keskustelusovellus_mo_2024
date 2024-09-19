@@ -1,0 +1,45 @@
+<title>Etusivu</title>
+<h1><span style="color:black">Tervetuloa keskustelusovellukseen!</span></h1>
+
+
+{% if session.user_id %}
+<b><span style="color:black">Olet kirjautunut nimellä: {{ session.user_name }}.</span></b>
+<p>
+<b><span style="color:black">Valitse alue, jossa haluat keskustella:</span></b>
+<ul>
+{% for area in areas %}
+<a href="/area/{{ area[0] }}">{{ area[1] }}</a><br>
+Viestiketjujen lukumäärä: {{ area[2] }}<br>
+Viestien lukumäärä: {{ area[3] }}<br>
+Viiimeinen viesti: {{ area[4] }}
+<br>
+{% endfor %}
+</ul>
+<br>
+<form action="/search_message" method="POST">
+<b><span style="color:black">Voit etsiä viestejä hakusanalla:</span></b>
+<textarea name="key_word" rows="1" cols="30"></textarea>
+<input type="submit" value="Etsi viestejä">
+</form>
+<br>
+<b><span style="color:black">Kaikki omat viestiketjut ja viestisi löytyvät <a href="/owndata">täältä</a></span></b>
+<br>
+<br>
+{% if session.user_role == 1 %}
+<b><span style="color:black">Olet kirjautunut ylläpitäjä roolilla, ylläpitäjä työkalut löytyvät <a href="/admin">täältä</a></span></b>
+{% endif %}
+<p>
+
+<a href="/logout">Kirjaudu ulos</a>
+{% else %}
+<b><span style="color:black">Ole hyvä ja kirjoittaudu sisään.</span></b>
+<form action="/login" method="POST">
+<p>Tunnus:<br>
+<input type="text" name="username"></p>
+<p>Salasana:<br>
+<input type="password" name="password"></p>
+<input type="submit" value="Kirjaudu">
+</form>
+Jos sinulla ei ole tunnusta, voit luoda uuden tunnuksen <a href="/register">tästä</a>
+<p>
+{% endif %}
