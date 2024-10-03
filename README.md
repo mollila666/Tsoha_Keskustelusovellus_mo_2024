@@ -11,6 +11,60 @@ Sovelluksella on toimiva pohja ja alla listatut toiminnot toimivat:
 	Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 	Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
 
+Sovelluksen ulkoasu on viimeistelyä vaille valmis. 
+
+Palauteen II perusteella on tehty seuraavat korjaukset:
+
+requirements.txt
+Lisätty navigointipalkki
+Virheet näkyvät samalla sivulla (leijonan osa virheistä)
+Muiden viestejä ei voi muokata kirjautumatta sisään
+Keskusteluketjuissa viestin lähettäjän nimi ja lähetysajankohta näkyy
+Uusia ketjuja tai viestejä ei voi yrittää tehdä jos ei ole kirjautunut sisään
+Salaiselle alueelle ei pääse osoitekentän kautta jos ei ole kirjautunut sisään. 
+Salaiselle ketjulle ei voi myös tällöin kirjautuneena kirjoittaa viestejä, vaikka ei olisi lupaa olla ketjulla.
+
+
+Testaus ohjeet:
+
+Sovellus ei ole testattavissa Fly.iossa.
+
+Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo kansioon .env-tiedosto ja määritä sen sisältö seuraavanlaiseksi:
+
+DATABASE_URL=<tietokannan-paikallinen-osoite>
+SECRET_KEY=<salainen-avain>
+
+Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla:
+
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r ./requirements.txt
+
+Määritä vielä tietokannan skeema komennolla
+
+$ psql < schema.sql
+
+Nyt voit käynnistää sovelluksen komennolla
+
+$ flask run
+
+################################################################################################################
+# palautus II alla
+#################################################################################################################
+
+Sovelluksen nykyinen tilanne:
+
+Sovelluksella on toimiva pohja ja alla listatut toiminnot toimivat:
+
+	Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
+	Käyttäjä näkee sovelluksen etusivulla listan alueista sekä jokaisen alueen ketjujen ja viestien määrän ja viimeksi lähetetyn viestin ajankohdan.
+	Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
+	Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
+	Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Käyttäjä voi myös poistaa ketjun tai viestin.
+	Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
+	Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
+	Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
+
 Sovelluksen ulkoasu on vaiheessa ja hyvin pelkistetty. Tämä on tarkoitus tehdä seuraavaksi, kun palaute palautteesta II on saatu.
 
 Testaus ohjeet:

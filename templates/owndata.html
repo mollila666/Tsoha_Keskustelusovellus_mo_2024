@@ -1,8 +1,20 @@
+{% extends "layout.html" %}
 <title>Omat viestit</title>
 
 {% block content %}
 
 <h2>Omat viestiketjut ja viestit!</h2>
+
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
 
 <b><span style="color:black">Voit muokata viestiä tai ketjun nimeä sekä poistaa viestisi tai koko ketjun.</span></b><br>
 <br>
@@ -18,9 +30,9 @@ Ketjun: {{chain[0][0]}}, viestit:<br>
 {% endif %}
 {% for message in chain[1] %}
 {% if message[2] == session.user_name %}
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="/editmessage/{{ message[1] }}">{{ message[0] }}</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="/editmessage/{{ message[1] }}">{{ message[0] }} </a>, Kirjoittaja: {{ message[2] }}, Luotu: {{ message[3] }} <br><br>
 {% else %}
-&nbsp;&nbsp;&nbsp;&nbsp; {{message[0]}}<br>
+&nbsp;&nbsp;&nbsp;&nbsp; {{message[0]}}, Kirjoittaja: {{ message[2] }}, Luotu: {{ message[3] }} <br><br>
 {% endif %}
 {% endfor %}
 {% endfor %}

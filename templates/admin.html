@@ -1,12 +1,24 @@
+{% extends "layout.html" %}
 <title>Ylläpitäjän työkalut</title>
 
 {% block content %}
+
 <h2>Ylläpitäjän työkalut ovat täällä!</h2>
-<br>
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
+
 <b><span style="color:black">Luo uusi alue:</span></b>
 <br>
 
-<form action="/create_area" method="POST">
+<form action="/create_area" method="POST" onsubmit="return check(this)">
 <b><span style="color:black"><p>Uusi alue:</span></b>
 <textarea name="area_name" rows="1" cols="40"></textarea>
 <input type="submit" value="Luo alue">
@@ -29,7 +41,7 @@
 <b><span style="color:black">Voit luoda myös salaisen alueen valituille käyttäjille!</span></b>
 <br>
 
-<form action="/create_private_area" method="POST">
+<form action="/create_private_area" method="POST" onsubmit="return check(this)">
 <b><span style="color:black"><p>Uusi alue:</span></b>
 <textarea name="area_name" rows="1" cols="40"></textarea>
 
@@ -45,6 +57,20 @@
 </form>
 
 <br>
+
+<script>
+function check(form) {
+    if (form.area_name.value.length > 100) {
+        alert("Alueen nimessä on liian monta merkkiä, maksimi on 100!");
+        return false;
+    }
+    if (form.area_name.value.length < 1) {
+        alert("Alueen nimessä pitää olla vähintään 1 merkki!");
+        return false;
+    }
+    return true;
+}
+</script>
 
 <a href="/">Palaa takaisin</a>
 

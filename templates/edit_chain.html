@@ -1,10 +1,22 @@
+{% extends "layout.html" %}
 <title>Ketjun muokkaaminen</title>
 {% block content %}
 
 <h2>Ketju nimeltä: {{ name }}.</h2>
 
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
+
 <b><span style="color:black">Voit muuttaa ketjun nimeä alla:</span></b><br>
-<form action="/rename_chain" method="POST">
+<form action="/rename_chain" method="POST" onsubmit="return check(this)">
 <textarea name="new_name" rows="1" cols="40">
 {{ name }}
 </textarea>
@@ -18,6 +30,20 @@
 <br>
 <input type="submit" value="Päivitä muutokset">
 </form>
+
+<script>
+function check(form) {
+    if (form.new_name.value.length > 100) {
+        alert("Muokattu ketjun nimi ei saa olla liian pitkä, maksimi 100 merkkiä!");
+        return false;
+    }
+    if (form.new_name.value.length < 1) {
+        alert("Muokattu ketjun nimi ei saa olla tyhjä, kirjoita nimi uudelleen!");
+        return false;
+    }
+    return true;
+}
+</script>
 
 <a href="/owndata">Palaa takaisin</a>
 

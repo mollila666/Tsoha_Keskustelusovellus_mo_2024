@@ -1,25 +1,53 @@
+{% extends "layout.html" %}
+
 <title>Viestiketjut</title>
 
 {% block content %}
 
 <h2>Ketju nimeltä {{ name }}:</h2>
 
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
+
 <b><span style="color:black">Ketjun {{ name }} viestit:</span></b>
 <br>
 <ul>
 {% for message in messages %}
-{{ message[0] }}<br>
+{{ message[0] }}, Kirjoittaja: {{ message[3] }}, Luotu: {{ message[2] }} <br>
 {% endfor %}
 </ul>
 
 <b><span style="color:black">Luo uusi viesti ketjuun  {{ name }}:</span></b>
 
-<form action="/create_message" method="POST">
+<form action="/create_message" method="POST" onsubmit="return check(this)">
 <input type="text" value={{ id }} name="chain_id" style="opacity: 0;"></p>
 <textarea name="Message" rows="5" cols="40"></textarea>
 <br>
 <input type="submit" value="Lähetä viesti">
 </form>
+
+<script>
+function check(form) {
+    if (form.Message.value.length > 2000) {
+        alert("Viesti ei saa olla liian pitkä, maksimi on 2000 merkkiä!");
+        return false;
+    }
+    if (form.Message.value.length < 1) {
+        alert("Viesti ei saa olla tyhjä, kirjoita viesti!");
+        return false;
+    }
+    return true;
+}
+</script>
+
 
 <a href="/area/{{ area_id }}">Palaa takaisin</a>
 

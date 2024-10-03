@@ -1,8 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
 <title>Etusivu</title>
 <h1><span style="color:black">Tervetuloa keskustelusovellukseen!</span></h1>
 
 
 {% if session.user_id %}
+
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
+
 <b><span style="color:black">Olet kirjautunut nimellä: {{ session.user_name }}.</span></b>
 <p>
 <b><span style="color:black">Valitse alue, jossa haluat keskustella:</span></b>
@@ -30,6 +46,7 @@ Viiimeinen viesti: {{ area[4] }}
 {% endif %}
 <p>
 
+
 <a href="/logout">Kirjaudu ulos</a>
 {% else %}
 <b><span style="color:black">Ole hyvä ja kirjoittaudu sisään.</span></b>
@@ -43,3 +60,6 @@ Viiimeinen viesti: {{ area[4] }}
 Jos sinulla ei ole tunnusta, voit luoda uuden tunnuksen <a href="/register">tästä</a>
 <p>
 {% endif %}
+{% endblock %}
+
+

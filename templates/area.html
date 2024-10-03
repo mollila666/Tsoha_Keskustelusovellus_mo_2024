@@ -1,8 +1,20 @@
+{% extends "layout.html" %}
 <title>Viestialueet</title>
 
 {% block content %}
 
 <h2>Alue nimeltä {{ name }}!</h2>
+
+<div class="navigointipalkki">
+<ul>
+	<li> <a href="/">Alku </a>   </li>
+	<li> <a href="/owndata">Omat viestiketjut </a>   </li>
+	{% if session.user_role == 1 %}
+	<li> <a href="/admin">Ylläpitäjä </a>   </li>
+	{% endif %}
+	<li> <a href="/logout">Kirjaudu ulos </a>   </li>
+</ul>
+</div>
 
 <b><span style="color:black">Alueen {{ name }} ketjut, valitse ketju, jossa haluat keskustella:</span></b>
 
@@ -17,7 +29,7 @@
 <b><span style="color:black">Luo uusi ketju!</span></b>
 <br>
 
-<form action="/create_chain" method="POST">
+<form action="/create_chain" method="POST" onsubmit="return check(this)">
 <b><span style="color:black"><p>Uusi ketju alueelle {{ name }}:</span></b>
 <input type="text" value={{ id }} name="area_id" style="opacity: 0;"></p>
 <textarea name="chain" rows="1" cols="40"></textarea>
@@ -29,7 +41,27 @@
 <input type="submit" value="Luo uusi ketju">
 </form>
 
-
+<script>
+function check(form) {
+    if (form.chain.value.length > 100) {
+        alert("Uuden ketjun nimessä on liian monta merkkiä, maksimi on 100!");
+        return false;
+    }
+    if (form.chain.value.length < 1) {
+        alert("Uudella ketjulla pitää olla nimi!");
+        return false;
+    }
+    if (form.content.value.length > 2000) {
+        alert("Viesti ei saa olla liian pitkä, maksimi on 2000 merkkiä!");
+        return false;
+    }
+    if (form.content.value.length < 1) {
+        alert("Viesti ei saa olla tyhjä, kirjoita viesti!");
+        return false;
+    }
+    return true;
+}
+</script>
 
 <a href="/">Palaa takaisin</a>
 

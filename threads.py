@@ -3,26 +3,34 @@ from db import db
 from flask import session
 
 def get_all_areas():
-    sql = "SELECT id, area FROM areas ORDER BY area"
-    areas=db.session.execute(text(sql)).fetchall()
-    temp_areas=[]
-    for area in areas:
-        sql = "SELECT id, chain FROM chains WHERE area_id=%s" %area[0]
-        chains=db.session.execute(text(sql)).fetchall()
-        all_chain_messages=[]
-        for chain in chains:
-            sql = "SELECT sent_at FROM chain_messages WHERE chain_id=%s ORDER BY sent_at" %chain[0]
-            chain_messages=db.session.execute(text(sql)).fetchall()
-            for chain_message in chain_messages:
-                all_chain_messages.append(chain_message[0])
-        all_chain_messages.sort()
-        if len(chains) > 0 and len(all_chain_messages) > 0:
-            temp_areas.append([area[0],area[1],len(chains),len(all_chain_messages),all_chain_messages[-1]])
-        elif len(chains) > 0:
-            temp_areas.append([area[0],area[1],len(chains),0,'Na'])
-        else:
-            temp_areas.append([area[0],area[1],0,0,'Na'])
-    return temp_areas
+    if "user_name" in session.keys():
+        sql = "SELECT id, area FROM areas ORDER BY area"
+        areas=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas ORDER BY area_id"
+        all_areas_private=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s'" %session["user_name"]
+        areas_private=db.session.execute(text(sql)).fetchall()
+        for area_id in set(all_areas_private):
+            if area_id not in areas_private:
+                areas.remove(area_id)
+        temp_areas=[]
+        for area in areas:
+            sql = "SELECT id, chain FROM chains WHERE area_id=%s" %area[0]
+            chains=db.session.execute(text(sql)).fetchall()
+            all_chain_messages=[]
+            for chain in chains:
+                sql = "SELECT sent_at FROM chain_messages WHERE chain_id=%s ORDER BY sent_at" %chain[0]
+                chain_messages=db.session.execute(text(sql)).fetchall()
+                for chain_message in chain_messages:
+                    all_chain_messages.append(chain_message[0])
+            all_chain_messages.sort()
+            if len(chains) > 0 and len(all_chain_messages) > 0:
+                temp_areas.append([area[0],area[1],len(chains),len(all_chain_messages),all_chain_messages[-1]])
+            elif len(chains) > 0:
+                temp_areas.append([area[0],area[1],len(chains),0,'Na'])
+            else:
+                temp_areas.append([area[0],area[1],0,0,'Na'])
+        return temp_areas
 
 def get_area_info(area_id):
     sql = "SELECT area FROM areas WHERE id=%s" %str(area_id)
@@ -31,36 +39,68 @@ def get_area_info(area_id):
 
 
 def add_area(area_id,chain,content):
-    sql = "INSERT INTO chains (chain, area_id, creator_name) VALUES ('%s', %s, '%s');" %(chain,str(area_id),session["user_name"])
-    db.session.execute(text(sql))
-    db.session.commit()
-    sql = "SELECT id FROM chains ORDER BY id"
-    areas=db.session.execute(text(sql)).fetchall()
-    sql = "INSERT INTO chain_messages (message, sent_at, chain_id, creator_name) VALUES ('%s', NOW(), %s, '%s');" %(content,str(areas[-1][0]),session["user_name"])
-    db.session.execute(text(sql))
-    db.session.commit()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id
+    all_areas_private=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id)
+    areas_private=db.session.execute(text(sql)).fetchall()
+    if len(all_areas_private) > 0 and len(areas_private) == 0:
+        pass
+    else:
+        sql = "INSERT INTO chains (chain, area_id, creator_name) VALUES ('%s', %s, '%s');" %(chain,str(area_id),session["user_name"])
+        db.session.execute(text(sql))
+        db.session.commit()
+        sql = "SELECT id FROM chains ORDER BY id"
+        areas=db.session.execute(text(sql)).fetchall()
+        sql = "INSERT INTO chain_messages (message, sent_at, chain_id, creator_name) VALUES ('%s', NOW(), %s, '%s');" %(content,str(areas[-1][0]),session["user_name"])
+        db.session.execute(text(sql))
+        db.session.commit()
     return ' '
 
 def get_all_chains(area_id):
-    sql = "SELECT chain, id, area_id FROM chains WHERE area_id=%s ORDER BY chain" %area_id
-    chains=db.session.execute(text(sql)).fetchall()
-    temp_chains=[]
-    for chain in chains:
-        temp_chains.append([chain[0],chain[1]])
-    return temp_chains
+    sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id
+    all_areas_private=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id)
+    areas_private=db.session.execute(text(sql)).fetchall()
+    if len(all_areas_private) > 0 and len(areas_private) == 0:
+        return 0
+    else:
+        sql = "SELECT chain, id, area_id FROM chains WHERE area_id=%s ORDER BY chain" %area_id
+        chains=db.session.execute(text(sql)).fetchall()
+        temp_chains=[]
+        for chain in chains:
+            temp_chains.append([chain[0],chain[1]])
+        return temp_chains
 
 def get_all_messages(chain_id):
-    sql = "SELECT message, id, sent_at, chain_id FROM chain_messages WHERE chain_id=%s ORDER BY sent_at" %chain_id
-    messages=db.session.execute(text(sql)).fetchall()
-    temp_messages=[]
-    for message in messages:
-        temp_messages.append([message[0],message[1]])
-    return temp_messages
+    sql = "SELECT area_id FROM chains WHERE id=%s" %chain_id
+    area_id=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id[0][0]
+    all_areas_private=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id[0][0])
+    areas_private=db.session.execute(text(sql)).fetchall()
+    if len(all_areas_private) > 0 and len(areas_private) == 0:
+        return 0
+    else:
+        sql = "SELECT message, id, sent_at, chain_id, creator_name FROM chain_messages WHERE chain_id=%s ORDER BY sent_at" %chain_id
+        messages=db.session.execute(text(sql)).fetchall()
+        temp_messages=[]
+        for message in messages:
+            temp_messages.append([message[0],message[1],message[2],message[4]])
+        return temp_messages
 
 def add_message(chain_id,message):
-    sql = "INSERT INTO chain_messages (message, sent_at, chain_id, creator_name) VALUES ('%s', NOW(), %s, '%s');" %(message,str(chain_id),session["user_name"])
-    db.session.execute(text(sql))
-    db.session.commit()
+    sql = "SELECT area_id FROM chains WHERE id=%s" %chain_id
+    area_id=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id[0][0]
+    all_areas_private=db.session.execute(text(sql)).fetchall()
+    sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id[0][0])
+    areas_private=db.session.execute(text(sql)).fetchall()
+    if len(all_areas_private) > 0 and len(areas_private) == 0:
+        pass
+    else:
+        sql = "INSERT INTO chain_messages (message, sent_at, chain_id, creator_name) VALUES ('%s', NOW(), %s, '%s');" %(message,str(chain_id),session["user_name"])
+        db.session.execute(text(sql))
+        db.session.commit()
     return ' '
 
 def add_new_area(area_name):
@@ -79,12 +119,21 @@ def get_chains_messages():
     chains=db.session.execute(text(sql)).fetchall()
     chains_messages=[]
     for chain in chains:
-        sql = "SELECT message, id, creator_name FROM chain_messages WHERE chain_id='%s' ORDER BY id" %chain[1]
-        messages=db.session.execute(text(sql)).fetchall()
-        if len(messages) > 0:
-            chains_messages.append([chain,messages])
+        sql = "SELECT area_id FROM chains WHERE id=%s" %chain[1]
+        area_id=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id[0][0]
+        all_areas_private=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id[0][0])
+        areas_private=db.session.execute(text(sql)).fetchall()
+        if len(all_areas_private) > 0 and len(areas_private) == 0:
+            pass
         else:
-            chains_messages.append([chain,[('Ei viestejä','','')]])
+            sql = "SELECT message, id, creator_name, sent_at FROM chain_messages WHERE chain_id='%s' ORDER BY id" %chain[1]
+            messages=db.session.execute(text(sql)).fetchall()
+            if len(messages) > 0:
+                chains_messages.append([chain,messages])
+            else:
+                chains_messages.append([chain,[('Ei viestejä','','')]])
     return chains_messages
 
 def get_users():
@@ -135,6 +184,15 @@ def search_messages(key_word):
     key_word_mod='%'+key_word+'%'
     sql = "SELECT id, message, chain_id FROM chain_messages WHERE message LIKE '%s'" %key_word_mod
     messages=db.session.execute(text(sql)).fetchall()
+    for chain in messages:
+        sql = "SELECT area_id FROM chains WHERE id=%s" %chain[2]
+        area_id=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas WHERE area_id=%s" %area_id[0][0]
+        all_areas_private=db.session.execute(text(sql)).fetchall()
+        sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id[0][0])
+        areas_private=db.session.execute(text(sql)).fetchall()
+        if len(all_areas_private) > 0 and len(areas_private) == 0:
+            messages.remove(chain)
     sql = "SELECT id, chain, area_id FROM chains"
     all_chains=db.session.execute(text(sql)).fetchall()
     sql = "SELECT id, area FROM areas"
@@ -170,6 +228,7 @@ def search_messages(key_word):
                 temp2.append(message)
             temp1.append([c_key,c_ids[c_key],temp2])
         all_messages.append([a_key,temp1])
+    print(all_messages)
     return all_messages
 
 def add_private_area(area_name,users):
