@@ -139,12 +139,6 @@ def get_chains_messages():
 def get_users():
     sql = "SELECT name, id FROM users ORDER BY name"
     users=db.session.execute(text(sql)).fetchall()
-#    temp=db.session.execute(text(sql)).fetchall()
-#    users=[]
-#    i=1
-#    for user in temp:
-#        users.append([user[0],i])
-#        i=i+1
     return users
 
 def check_users(username):
@@ -184,6 +178,7 @@ def search_messages(key_word):
     key_word_mod='%'+key_word+'%'
     sql = "SELECT id, message, chain_id FROM chain_messages WHERE message LIKE '%s'" %key_word_mod
     messages=db.session.execute(text(sql)).fetchall()
+    new_messages=[]
     for chain in messages:
         sql = "SELECT area_id FROM chains WHERE id=%s" %chain[2]
         area_id=db.session.execute(text(sql)).fetchall()
@@ -192,7 +187,10 @@ def search_messages(key_word):
         sql = "SELECT area_id, area_name FROM private_areas WHERE user_name='%s' AND area_id=%s" %(session["user_name"],area_id[0][0])
         areas_private=db.session.execute(text(sql)).fetchall()
         if len(all_areas_private) > 0 and len(areas_private) == 0:
-            messages.remove(chain)
+            pass
+        else:
+            new_messages.append(chain)
+    messages=new_messages
     sql = "SELECT id, chain, area_id FROM chains"
     all_chains=db.session.execute(text(sql)).fetchall()
     sql = "SELECT id, area FROM areas"
@@ -228,7 +226,6 @@ def search_messages(key_word):
                 temp2.append(message)
             temp1.append([c_key,c_ids[c_key],temp2])
         all_messages.append([a_key,temp1])
-    print(all_messages)
     return all_messages
 
 def add_private_area(area_name,users):
