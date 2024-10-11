@@ -22,6 +22,7 @@
 <b><span style="color:black"><p>Uusi alue:</span></b>
 <textarea name="area_name" rows="1" cols="40"></textarea>
 <input type="submit" value="Luo alue">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 <b><span style="color:black">Voit poistaa alueen tästä:</span></b>
@@ -35,6 +36,7 @@
 {% endfor %}
 </select>
 <input type="submit" value="Poista alue">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 
@@ -54,6 +56,7 @@
 <br>
 <br>
 <input type="submit" value="Luo salattu alue">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <br>

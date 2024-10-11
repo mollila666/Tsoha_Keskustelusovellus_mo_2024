@@ -65,6 +65,8 @@ def show_area(area_id):
 
 @app.route("/create_chain", methods=["post"])
 def create_new_chain():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         area_id = request.form["area_id"]
         chain = request.form["chain"]
@@ -86,6 +88,8 @@ def select_chain(chain_id):
 
 @app.route("/create_message", methods=["post"])
 def create_new_message():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         chain_id = request.form["chain_id"]
         message = request.form["Message"]
@@ -103,6 +107,8 @@ def admin_tools():
 
 @app.route("/create_area", methods=["post"])
 def create_new_area():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         area_name = request.form["area_name"]
         if threads.check_areas(area_name) > 0:
@@ -112,6 +118,8 @@ def create_new_area():
 
 @app.route("/delete_area", methods=["post"])
 def delete_old_area():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         area_name = request.form["area_name"]
         threads.delete_area(area_name)
@@ -119,6 +127,8 @@ def delete_old_area():
 
 @app.route("/search_message", methods=["post"])
 def search_messages():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         key_word = request.form["key_word"]
         found_messages=threads.search_messages(key_word)
@@ -126,6 +136,8 @@ def search_messages():
 
 @app.route("/create_private_area", methods=["post"])
 def create_private_areas():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         area_name = request.form["area_name"]
         user_name=request.form.getlist('users')
@@ -148,6 +160,8 @@ def rename_chain(chain_id):
 
 @app.route("/rename_chain", methods=["post"])
 def rename_delete_chain():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         chainid = request.form["chain_id"]
         chain_name = threads.get_chain_name(chainid)
@@ -167,6 +181,8 @@ def rename_message(message_id):
 
 @app.route("/rename_message", methods=["post"])
 def rename_delete_message():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if session["user_name"]:
         messageid = request.form["message_id"]
         message_name = threads.get_message_name(messageid)

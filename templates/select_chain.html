@@ -32,6 +32,7 @@
 <textarea name="Message" rows="5" cols="40"></textarea>
 <br>
 <input type="submit" value="Lähetä viesti">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <script>

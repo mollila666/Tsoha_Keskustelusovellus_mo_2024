@@ -36,6 +36,7 @@ Viiimeinen viesti: {{ area[4] }}
 <b><span style="color:black">Voit etsiä viestejä hakusanalla:</span></b>
 <textarea name="key_word" rows="1" cols="30"></textarea>
 <input type="submit" value="Etsi viestejä">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 <b><span style="color:black">Kaikki omat viestiketjut ja viestisi löytyvät <a href="/owndata">täältä</a></span></b>
