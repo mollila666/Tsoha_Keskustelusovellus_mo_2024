@@ -38,6 +38,17 @@ Koodissasi on CSRF-haavoittuvuus.
 Tietokannan suunnittelussa on parannettavaa. Viitatessa taulusta toiseen tulisi käyttää viiteavaimia (FOREIGN KEY)
 
 	FOREIGN KEY & REFERENCES otettu käyttöön.
+	
+Korjattu
+
+	import Flash abort
+
+Vertaisarviointi 2:ssa mainittua ongelmaa
+
+	Salaiset alueet eivät näyttäneet toimivan. Toinen ”käyttäjä” tason käyttäjä kykeni näkemään ja 
+	kirjoittamaan salaiselle alueelle, vaikkei häntä ollut lisätty sille.
+
+En pystynyt toistamaan, eli siihen ei ole korjausta tehty.
 
 Testaus ohjeet:
 
